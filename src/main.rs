@@ -1,7 +1,6 @@
-use serde::{Deserialize, Serialize};
-use std::clone;
+use serde::{Deserialize};
 use std::f64::consts::PI;
-use std::{error::Error, fs::File, io, io::BufReader, process};
+use std::{error::Error, fs::File, io::BufReader,};
 
 const DEFAULT_LAT: f64 = 45.13222;
 const DEFAULT_LONG: f64 = 13.5914833;
