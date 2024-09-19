@@ -1,6 +1,6 @@
-use serde::{Deserialize};
+use serde::Deserialize;
 use std::f64::consts::PI;
-use std::{error::Error, fs::File, io::BufReader,};
+use std::{error::Error, fs::File, io::BufReader};
 
 const DEFAULT_LAT: f64 = 45.13222;
 const DEFAULT_LONG: f64 = 13.5914833;
@@ -9,18 +9,17 @@ fn to_radians(degrees: f64) -> f64 {
     degrees * PI / 180.0
 }
 
-#[derive(Debug, Deserialize,Clone,)]
+#[derive(Debug, Deserialize, Clone)]
 struct Positions {
     date: String,
     lat: f64,
     lon: f64,
-
 }
 
-#[derive(Debug,Clone)]
-struct PositionWIthDistance{
-    position : Positions,
-    distance : f64,
+#[derive(Debug, Clone)]
+struct PositionWIthDistance {
+    position: Positions,
+    distance: f64,
 }
 
 fn calc_distance(lat1: f64, lon1: f64, lat2: f64, lon2: f64) -> f64 {
@@ -45,7 +44,7 @@ fn read_from_csv(
         // The iterator yields Result<StringRecord, Error>, so we check the
         // error here.
         let positions: Positions = result?;
-    output.push(positions);
+        output.push(positions);
         //println!("{:?}", positions);
     }
     Ok(output)
@@ -62,21 +61,17 @@ fn main() -> std::io::Result<()> {
     } */
 
     match read_from_csv(buf_reader, results) {
-        Ok(out) =>/*  {
-            let alarms: Vec<&Positions> = out
-                .iter()
-                .filter(|x| calc_distance(DEFAULT_LAT, DEFAULT_LONG, x.lat, x.lon) > 40.0)
-                .collect();
-            for position in alarms {
-                println!(
-                    "Alarm positions {} - {} at {}",
-                    position.lat, position.lon, position.date
-                )
-            }
-        } */
-        {
+        Ok(out) => {
             for position in out {
-                let pos = PositionWIthDistance {position : position.clone(), distance: calc_distance(DEFAULT_LAT, DEFAULT_LONG, position.clone().lat, position.clone().lon)};
+                let pos = PositionWIthDistance {
+                    position: position.clone(),
+                    distance: calc_distance(
+                        DEFAULT_LAT,
+                        DEFAULT_LONG,
+                        position.clone().lat,
+                        position.clone().lon,
+                    ),
+                };
                 alarm_positions.push(pos);
             }
         }
@@ -89,8 +84,6 @@ fn main() -> std::io::Result<()> {
         if position.distance > 40.0 {
             println!("{:?}", position);
         }
-        
-        
     }
 
     Ok(())
