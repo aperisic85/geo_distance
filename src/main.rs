@@ -1,12 +1,21 @@
 
 use std::{error::Error, fs::File, io::BufReader};
 use distane::position::{Positions,PositionWIthDistance};
-
+use clap::Parser;
 const DEFAULT_LAT: f64 = 45.13222;
 const DEFAULT_LONG: f64 = 13.5914833;
 
+#[derive(Debug,Parser)]
+#[command(version,about,long_about=None)]
+struct Args {
+    #[arg(short, long)]
+    file: String,
+}
+
 fn main() -> std::io::Result<()> {
-    let file = File::open("sample.csv")?;
+    let args = Args::parse();
+    
+    let file = File::open(args.file)?;
     let buf_reader = BufReader::new(file);
     let results: Vec<Positions> = Vec::new();
     let mut alarm_positions: Vec<PositionWIthDistance> = Vec::new();
