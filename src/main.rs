@@ -1,29 +1,14 @@
-
-use std::{error::Error, fs::File, io::BufReader};
-use distane::position::{Positions,PositionWIthDistance};
-use clap::Parser;
+use distane::position::{PositionWIthDistance, Positions};
+use std::{fs::File, io::BufReader};
 const DEFAULT_LAT: f64 = 45.13222;
 const DEFAULT_LONG: f64 = 13.5914833;
 
-#[derive(Debug,Parser)]
-#[command(version,about,long_about=None)]
-struct Args {
-    #[arg(short, long)]
-    file: String,
-}
-
 fn main() -> std::io::Result<()> {
-    let args = Args::parse();
-    
+    let args = distane::args::parse_args();
     let file = File::open(args.file)?;
     let buf_reader = BufReader::new(file);
     let results: Vec<Positions> = Vec::new();
     let mut alarm_positions: Vec<PositionWIthDistance> = Vec::new();
-
-    /* if let Err(err) = read_from_csv(buf_reader, results) {
-        println!("error running example: {}", err);
-        process::exit(1);
-    } */
 
     match distane::position::read_from_csv(buf_reader, results) {
         Ok(out) => {
@@ -33,8 +18,8 @@ fn main() -> std::io::Result<()> {
                     distance: distane::position::calc_distance(
                         DEFAULT_LAT,
                         DEFAULT_LONG,
-                        position.clone().lat,
-                        position.clone().lon,
+                        position.lat,
+                        position.lon,
                     ),
                 };
                 alarm_positions.push(pos);
@@ -46,7 +31,7 @@ fn main() -> std::io::Result<()> {
     }
 
     for position in alarm_positions {
-        if position.distance > 40.0 {
+        if position.distance > args.radius as f64 {
             println!("{}", position);
         }
     }

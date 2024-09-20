@@ -17,7 +17,11 @@ pub struct PositionWIthDistance {
 
 impl std::fmt::Display for PositionWIthDistance {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f,"Udaljenost od zadane pozicije : {:.3} m. Vrijeme: {}", self.distance, self.position.date)
+        write!(
+            f,
+            "Udaljenost: {:.3} m. Vrijeme: {}",
+            self.distance, self.position.date
+        )
     }
 }
 fn to_radians(degrees: f64) -> f64 {
