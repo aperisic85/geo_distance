@@ -1,7 +1,9 @@
 use distane::position::{PositionWIthDistance, Positions};
 use std::{fs::File, io::BufReader};
-const DEFAULT_LAT: f64 = 45.13222;
-const DEFAULT_LONG: f64 = 13.5914833;
+//const DEFAULT_LAT: f64 = 45.13222;
+//const DEFAULT_LONG: f64 = 13.5914833;
+const DEFAULT_LAT: f64 = 43.0534;
+const DEFAULT_LONG: f64 = 16.456683;
 
 fn main() -> std::io::Result<()> {
     let args = distane::args::parse_args();
@@ -12,7 +14,9 @@ fn main() -> std::io::Result<()> {
 
     match distane::position::read_from_csv(buf_reader, results) {
         Ok(out) => {
+            let mut posa: usize = 0;
             for position in out {
+                posa = posa + 1;
                 let pos = PositionWIthDistance {
                     position: position.clone(),
                     distance: distane::position::calc_distance(
@@ -24,17 +28,24 @@ fn main() -> std::io::Result<()> {
                 };
                 alarm_positions.push(pos);
             }
+            println!("{} positions in file", posa);
         }
         Err(err) => {
             println!("Error : {}", err)
         }
     }
 
+    let mut posa = 0;
+
     for position in alarm_positions {
-        if position.distance > args.radius as f64 {
+        
+        if position.distance >= args.radius as f64 {
+            posa +=1;
             println!("{}", position);
         }
     }
+    println!("{} of positions in alarm", posa);
+    
 
     Ok(())
 }

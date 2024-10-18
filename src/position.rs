@@ -44,11 +44,8 @@ pub fn read_from_csv(
     b: BufReader<File>,
     mut output: Vec<Positions>,
 ) -> Result<Vec<Positions>, Box<dyn Error>> {
-    // Build the CSV reader and iterate over each record.
     let mut rdr = csv::Reader::from_reader(b);
     for result in rdr.deserialize() {
-        // The iterator yields Result<StringRecord, Error>, so we check the
-        // error here.
         let positions: Positions = result?;
         output.push(positions);
         //println!("{:?}", positions);
