@@ -14,9 +14,9 @@ fn main() -> std::io::Result<()> {
 
     match distane::position::read_from_csv(buf_reader, results) {
         Ok(out) => {
-            let mut posa: usize = 0;
+            let mut pos_no: usize = 0;
             for position in out {
-                posa = posa + 1;
+                pos_no = pos_no + 1;
                 let pos = PositionWIthDistance {
                     position: position.clone(),
                     distance: distane::position::calc_distance(
@@ -28,23 +28,23 @@ fn main() -> std::io::Result<()> {
                 };
                 alarm_positions.push(pos);
             }
-            println!("{} positions in file", posa);
+            println!("{} positions in file", pos_no);
         }
         Err(err) => {
             println!("Error : {}", err)
         }
     }
 
-    let mut posa = 0;
+    let mut pos_no = 0;
 
     for position in alarm_positions {
         
         if position.distance >= args.radius as f64 {
-            posa +=1;
+            pos_no +=1;
             println!("{}", position);
         }
     }
-    println!("{} of positions in alarm", posa);
+    println!("{} of positions in alarm", pos_no);
     
 
     Ok(())
